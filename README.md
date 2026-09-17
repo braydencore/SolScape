@@ -1,10 +1,16 @@
-# SolScape
+# SolScape (Stonkscape)
 
 A 2011-era RuneScape private server, built on top of [Void](https://github.com/GregHib/void) — an
-open-source (BSD-3-Clause) Kotlin server emulator.
+open-source (BSD-3-Clause) Kotlin server emulator. In-game the server is branded **Stonkscape**.
 
-Void is included as a git submodule under [`server/`](server) so it can be updated against upstream
-independently of this repo's own scripts/docs.
+Void is included as a git submodule under [`server/`](server), pointed at
+[our own fork](https://github.com/braydencore/void) rather than upstream directly — this is where
+our customizations (branding, starter kit, config tweaks, etc.) live and get committed, so they
+persist independently of any one Codespace/machine. Pull upstream Void's own updates in with:
+```bash
+git -C server fetch upstream   # first: git -C server remote add upstream https://github.com/GregHib/void.git
+git -C server merge upstream/main
+```
 
 ## What's here vs. what you need to supply
 
@@ -64,4 +70,5 @@ independently of this repo's own scripts/docs.
 - Content, config, and gameplay tuning live entirely inside `server/`; see its own
   [README](server/README.md) and [wiki](https://github.com/GregHib/void/wiki) for adding
   scripts/content without touching engine internals.
-- To pull upstream Void updates: `git submodule update --remote server`.
+- To pull upstream Void updates, see the fetch/merge commands above (our fork tracks `origin`,
+  upstream Void tracks a separate `upstream` remote).
