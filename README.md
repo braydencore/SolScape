@@ -48,7 +48,15 @@ independently of this repo's own scripts/docs.
    You should see `[Main] - Void loaded in ...ms` once it's up.
 
 5. **Connect with a client** — download a [void-client release](https://github.com/GregHib/void-client/releases)
-   (or build it from source) and log in with any username/password to create an account.
+   `.jar` and place it in [`client/`](client), then run the launcher for your OS instead of a bare
+   `java -jar`:
+   ```bash
+   ./client/run-client.sh    # macOS/Linux
+   client\run-client.bat     # Windows
+   ```
+   These pass `-Dsun.java2d.uiScale=1`, which fixes a common Java-on-high-DPI-displays bug where
+   click positions drift from what's rendered on screen (the window gets scaled by the OS but click
+   coordinates don't, unless told not to). Log in with any username/password to create an account.
 
 ## Notes
 
