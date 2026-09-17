@@ -1,0 +1,12 @@
+# Build output
+build/
+*.class
+
+# IDE
+.idea/
+*.iml
+
+# OS
+.DS_Store
+
+# Local runtime data (cache, saves) live under server/data and are gitignored there
