@@ -53,14 +53,19 @@ git -C server merge upstream/main
    ```
    You should see `[Main] - Void loaded in ...ms` once it's up.
 
-5. **Build and package the client — Windows, one step:**
+5. **Build a distributable installer — Windows, one step:**
    Double-click [`build-stonkscape-client.bat`](build-stonkscape-client.bat) (run it from inside
-   your local clone of this repo, on the machine you'll actually play from). It pulls the latest
-   code, builds our branded client fork, packages it into a real `Stonkscape.exe` with the icon and
-   the high-DPI click-drift fix baked in, and drops a shortcut on your Desktop. No Java 8 install
-   needed — Gradle fetches it automatically on first run (just needs Java with `jpackage`, e.g. the
-   same [Temurin](https://adoptium.net/temurin/releases/) install used for the server, to actually
-   package the `.exe`).
+   your local clone of this repo). It pulls the latest code, builds our branded client fork, and
+   packages it into a single **`Stonkscape-1.0.0.exe` installer** (in `dist/`) with the icon and
+   high-DPI click-drift fix baked in. That one file is what you hand to players — they run it, it
+   installs itself with a Start Menu/Desktop shortcut, done. No Java 8 install needed for you either
+   — Gradle fetches it automatically on first run.
+
+   Requires, on **your** build machine only (never for players):
+   - A JDK 14+ with `jpackage` (the same [Temurin](https://adoptium.net/temurin/releases/) install
+     used for the server covers this).
+   - The [WiX Toolset](https://github.com/wixtoolset/wix3/releases) — needed by `jpackage` to build
+     a Windows installer rather than just a plain app folder.
 
    **macOS/Linux, or if you'd rather do it by hand:**
    ```bash
