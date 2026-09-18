@@ -1,3 +1,6 @@
 [submodule "server"]
 	path = server
 	url = https://github.com/braydencore/void.git
+[submodule "client-src"]
+	path = client-src
+	url = https://github.com/braydencore/stonkscape-client.git

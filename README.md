@@ -18,7 +18,7 @@ git -C server merge upstream/main
 |---|---|
 | Server engine/game code (Void) | ✅ Included as submodule, builds successfully |
 | Game cache (map/item/model data) | ❌ **Not included** — copyrighted Jagex assets, must be sourced separately |
-| Game client (`void-client`) | ❌ Not included — see [void-client releases](https://github.com/GregHib/void-client/releases) |
+| Game client | ✅ Our own branded fork ([`client-src/`](client-src)), builds to a runnable jar |
 
 > [!IMPORTANT]
 > The game cache is proprietary RuneScape client data owned by Jagex. It is **not** part of Void's
@@ -53,9 +53,16 @@ git -C server merge upstream/main
    ```
    You should see `[Main] - Void loaded in ...ms` once it's up.
 
-5. **Connect with a client** — download a [void-client release](https://github.com/GregHib/void-client/releases)
-   `.jar` and place it in [`client/`](client), then run the launcher for your OS instead of a bare
-   `java -jar`:
+5. **Build our own branded client** — this is a much older codebase than the server and needs
+   **Java 8** specifically (not 21+), so build it separately on whichever machine you'll actually
+   play from:
+   ```bash
+   cd client-src
+   ./gradlew :client:build -x test
+   ```
+   The runnable jar lands at `client-src/client/build/libs/client.jar`. Copy it into
+   [`client/`](client) (rename to whatever `run-client.sh`/`.bat` expects, or update those scripts'
+   jar-name pattern) and launch it the same way as before:
    ```bash
    ./client/run-client.sh    # macOS/Linux
    client\run-client.bat     # Windows
@@ -63,6 +70,17 @@ git -C server merge upstream/main
    These pass `-Dsun.java2d.uiScale=1`, which fixes a common Java-on-high-DPI-displays bug where
    click positions drift from what's rendered on screen (the window gets scaled by the OS but click
    coordinates don't, unless told not to). Log in with any username/password to create an account.
+
+   **Optional — package as a native `.exe`/app** instead of a jar + launcher script, with the DPI
+   fix and icon baked in permanently (no visible console window, feels like a normal installed
+   game):
+   ```bash
+   jpackage --input client-src/client/build/libs --main-jar client.jar \
+     --name Stonkscape --icon client-src/client/resources/icon-256.png \
+     --java-options "-Dsun.java2d.uiScale=1" --type app-image
+   ```
+   `jpackage` ships with any JDK 14+ and must be run **on the OS you're packaging for** (a Windows
+   `.exe` needs to be built on Windows) — run it locally on your own machine, not in a Codespace.
 
 ## Notes
 
