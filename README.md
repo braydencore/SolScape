@@ -53,34 +53,30 @@ git -C server merge upstream/main
    ```
    You should see `[Main] - Void loaded in ...ms` once it's up.
 
-5. **Build our own branded client** — this is a much older codebase than the server and needs
-   **Java 8** specifically (not 21+), so build it separately on whichever machine you'll actually
-   play from:
+5. **Build and package the client — Windows, one step:**
+   Double-click [`build-stonkscape-client.bat`](build-stonkscape-client.bat) (run it from inside
+   your local clone of this repo, on the machine you'll actually play from). It pulls the latest
+   code, builds our branded client fork, packages it into a real `Stonkscape.exe` with the icon and
+   the high-DPI click-drift fix baked in, and drops a shortcut on your Desktop. No Java 8 install
+   needed — Gradle fetches it automatically on first run (just needs Java with `jpackage`, e.g. the
+   same [Temurin](https://adoptium.net/temurin/releases/) install used for the server, to actually
+   package the `.exe`).
+
+   **macOS/Linux, or if you'd rather do it by hand:**
    ```bash
    cd client-src
-   ./gradlew :client:build -x test
+   ./gradlew :client:shadowJar        # jar lands in client-src/client/build/libs/
+   cp client-src/client/build/libs/void-client-*.jar client/
+   ./client/run-client.sh             # or client\run-client.bat on Windows
    ```
-   The runnable jar lands at `client-src/client/build/libs/client.jar`. Copy it into
-   [`client/`](client) (rename to whatever `run-client.sh`/`.bat` expects, or update those scripts'
-   jar-name pattern) and launch it the same way as before:
+   To package your own native app/exe instead of the jar+script combo:
    ```bash
-   ./client/run-client.sh    # macOS/Linux
-   client\run-client.bat     # Windows
-   ```
-   These pass `-Dsun.java2d.uiScale=1`, which fixes a common Java-on-high-DPI-displays bug where
-   click positions drift from what's rendered on screen (the window gets scaled by the OS but click
-   coordinates don't, unless told not to). Log in with any username/password to create an account.
-
-   **Optional — package as a native `.exe`/app** instead of a jar + launcher script, with the DPI
-   fix and icon baked in permanently (no visible console window, feels like a normal installed
-   game):
-   ```bash
-   jpackage --input client-src/client/build/libs --main-jar client.jar \
-     --name Stonkscape --icon client-src/client/resources/icon-256.png \
+   jpackage --input client-src/client/build/libs --main-jar <the-jar-file> \
+     --name Stonkscape --icon client-src/client/resources/icon.ico \
      --java-options "-Dsun.java2d.uiScale=1" --type app-image
    ```
-   `jpackage` ships with any JDK 14+ and must be run **on the OS you're packaging for** (a Windows
-   `.exe` needs to be built on Windows) — run it locally on your own machine, not in a Codespace.
+   `jpackage` must run **on the OS you're packaging for** (a Windows `.exe` needs Windows) — do this
+   locally, not in a Codespace. Log in with any username/password to create an account.
 
 ## Notes
 
