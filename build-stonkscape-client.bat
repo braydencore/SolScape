@@ -19,6 +19,21 @@ if errorlevel 1 (
 echo.
 echo [2/4] Building the client (Java 8 will be auto-downloaded by Gradle the
 echo        first time if you don't already have it - this can take a while).
+rem This project's build tooling doesn't support very new Java versions yet,
+rem so find a separately-installed Java 21 to run Gradle itself with (this
+rem does NOT affect your main Java install or the server, which stay as-is).
+set GRADLE_JAVA21=
+for /d %%d in ("C:\Program Files\Eclipse Adoptium\jdk-21*") do set GRADLE_JAVA21=%%d
+if "%GRADLE_JAVA21%"=="" (
+    echo.
+    echo Could not find a Java 21 install needed to run this build ^(your main
+    echo Java is newer than this old project's tooling supports^).
+    echo Install it from: https://adoptium.net/temurin/releases/?version=21
+    echo then re-run this script.
+    pause
+    exit /b 1
+)
+set JAVA_HOME=%GRADLE_JAVA21%
 cd client-src
 call gradlew.bat :client:shadowJar
 if errorlevel 1 (
